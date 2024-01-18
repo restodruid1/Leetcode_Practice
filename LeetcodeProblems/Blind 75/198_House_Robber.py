@@ -30,18 +30,46 @@ Constraints:
 
 
 """
-
+Top-Down DP
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        rob1 = 0
-        rob2 = 0
+        n = len(nums)
+        if n == 1:
+            return nums[0]
+        if n == 2:
+            return max(nums[0], nums[1])
 
-        for ele in nums:
-            tmp = max(ele + rob1, rob2)
-            rob1 = rob2
-            rob2 = tmp
+        dp = [0] * n
+        dp[0] = nums[0]
+        dp[1] = nums[1]
+        dp[2] = nums[2] + nums[0]
 
-        return rob2
+        for i in range(3, n):
+            dp[i] = nums[i] + max(dp[i-2],dp[i-3])
+        
+        return max(dp[-1], dp[-2])
 
 #Time Complexity = O(n)
-#Space Complexity = O(1)
+#Space Complexity = O(n)
+
+Bottom-UP DP
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        n = len(nums)
+        if n == 1:
+            return nums[0]
+        if n == 2:
+            return max(nums[1], nums[0]) 
+        
+        dp = [0] * n
+        dp[-1] = nums[-1]
+        dp[-2] = nums[-2]
+        dp[-3] = dp[-1] + nums[-3]
+
+        for i in range(len(nums)-4,-1,-1):
+            dp[i] = nums[i] + max(dp[i+2], dp[i+3])
+        
+        return max(dp[0], dp[1])
+
+#Time Complexity = O(n)
+#Space Complexity = O(n)
